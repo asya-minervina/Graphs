@@ -49,17 +49,6 @@ ggplot(shVJ_tbl, aes(x=num, y=Freq, col=twins))+
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   
 #Same but barblot
 ggplot(shVJ_tbl, aes(x=num, y=Freq))+
