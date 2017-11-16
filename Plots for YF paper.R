@@ -199,7 +199,7 @@ make_histplot <- function(histdatacsv2) {
     theme(axis.title.y = element_text(size=24, face="bold"))+
     theme(axis.title.x = element_text(size=24, face="bold"))+
     scale_y_continuous(expand=c(0,0), limits=c(0, 101))+
-    scale_x_continuous(expand=c(0,0), breaks = c(0:12), limits=c(0,13))
+    scale_x_continuous( breaks = c(0:12), limits=c(0,13))
 }
 
 #Heatmap
@@ -275,4 +275,29 @@ make_scatter <- function(DR_data_csv) {
     theme(axis.title.x = element_text(size=24, face="bold"))+
       geom_abline(slope = 1, intercept = 0, size=1.3)
 }
+
+#Roc
+roc<-read.csv("fig_data/leave_one_out_roc.csv")
+roc_tet<-read.csv("fig_data/tet_roc.csv")
+ggplot(roc, aes(1-specificity, sensitivity,col=donor))+
+  geom_line(size=1.5, aes(color=donor))+
+  theme_light()+
+  scale_x_continuous(expand=c(0,0), limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
+  scale_y_continuous(expand=c(0,0), limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
+  theme(panel.grid.minor.x = element_blank())+
+  theme(panel.grid.minor.y = element_blank())+
+  xlab(label = "1-Specificity")+
+  theme(axis.title.x = element_text(size=22))+
+  ylab("Sensitivity")+
+  scale_color_manual(values = c(my_six_colors))+
+  theme(legend.title = element_text(size=24, face="bold"))+
+  theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
+  theme(legend.text = element_text(size=20, color="black"))+
+  theme(axis.title.y = element_text(size=22))+
+  theme(axis.text.x = element_text(size=18, color="black"))+
+  theme(axis.text.y = element_text(size=16, color="black"))+
+  geom_abline(slope = 1, intercept = 0, size=1)
+  
+  ggtitle(plotname)+
+  theme(plot.title = element_text(hjust = 0.5, size=20))
   
