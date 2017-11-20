@@ -22,6 +22,7 @@ scientific_10 <- function(x) {
 }
 
 #Barplots for diff between day0 and other days, place name of the file in the first function
+#save as 7 9 inches
 
 make_barplot <- function(x, uplim=1600) {
   num_DE_clones<-fread(x)
@@ -36,13 +37,14 @@ make_barplot <- function(x, uplim=1600) {
     theme(panel.grid.major.x = element_blank())+
     theme(axis.title.x = element_blank())+
     theme(axis.text.x = element_text(size=24, color="black"))+
-    theme(axis.text.y = element_text(size=18, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
     ylab(label = "Number of expanded clones\ncomparing to day 0")+
-    theme(axis.title.y = element_text(size=22))+
+    theme(axis.title.y = element_text(size=26))+
     scale_x_discrete(labels = c("day -7", "day 7", "day 15", "day 45"))+
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
-    theme(legend.text = element_text(size=20, color="black"))
+    theme(legend.text = element_text(size=22, color="black"))+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))
     # ggtitle(plotname)+
     # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
@@ -75,17 +77,18 @@ make_lineplot <- function(CD4, CD8) {
     theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
     theme(strip.text = element_text(colour="black", face="bold", size=20))+
     ylab(label = "Fraction of YF17D-specific cells")+
-    theme(axis.title.x = element_text(size=22))+
+    theme(axis.title.x = element_text(size=26))+
     xlab("Days after vaccination")+
     theme(panel.spacing.x = unit(2, "lines"))+
     scale_color_manual(values = my_six_colors)+
     scale_fill_manual(values = my_six_colors)+
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
-    theme(legend.text = element_text(size=20, color="black"))+
-    theme(axis.title.y = element_text(size=22))+
-    theme(axis.text.x = element_text(size=18, color="black"))+
-    theme(axis.text.y = element_text(size=16, color="black"))
+    theme(legend.text = element_text(size=22, color="black"))+
+    theme(axis.title.y = element_text(size=26))+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))
     # ggtitle(plotname)+
     # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
@@ -163,15 +166,16 @@ make_similarity_plot <- function(filename) {
     theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
     theme(strip.text = element_text(colour="black", face="bold", size=17))+
     theme(axis.title.x = element_blank())+
-    theme(axis.text.x = element_text(size=18, color="black"))+
+    theme(axis.text.x = element_text(size=22, color="black"))+
     #theme(axis.text.x = element_blank())+
     theme(legend.position = "none")+
-    theme(axis.text.y = element_text(size=20, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
-    theme(legend.text = element_text(size=20, color="black"))+
+    theme(legend.text = element_text(size=22, color="black"))+
     ylab(label=expression(atop(paste(log[10]," normalized number"), "of similar CDR3aa sequencies")))+
-    theme(axis.title.y = element_text(size=22))+
+    theme(axis.title.y = element_text(size=26))+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))+
   # ggtitle(plotname)+
   #   theme(plot.title = element_text(hjust = 0.5, size=20))+
     scale_x_discrete(labels=c("YF\nspecific", "random"))
@@ -222,9 +226,11 @@ make_heatmap <- function(data_heat_csv) {
     theme(legend.text = element_text(colour="black", size = 24,  hjust = 1))+
     theme(legend.title=element_text(colour="black", size = 24, face = "bold"))+
     theme(legend.text.align=0)+
-    theme(legend.key = element_rect(size = 22),legend.key.size = unit(2, 'lines'))+
-    scale_fill_viridis( na.value = "grey60",breaks=c(0, 1e-5, 2e-5, 3e-5), labels=c(" 0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5)),
-                        name="Normalized\nsharing\n ", direction = 1)
+    theme(legend.key = element_rect(size = 22),legend.key.size = unit(2.5, 'lines'))+
+    #for edgeR and Max: scale_fill_viridis( na.value = "grey60",breaks=c(0, 1e-5, 2e-5, 3e-5), labels=c(" 0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5)),name="Normalized\nsharing\n ", direction = 1)
+    #for top: scale_fill_viridis( na.value = "grey60",breaks=c(4e-6, 8e-6, 1.2e-5, 1.6e-5), labels=c(scientific_10(4e-6), scientific_10(8e-6), scientific_10(1.2e-5),scientific_10(1.6e-5)),name="Normalized\nsharing\n ", direction = 1)
+    #for total:
+    scale_fill_viridis( na.value = "grey60",breaks=c(4.25e-8, 4.75e-8, 5.25e-8), labels=c(scientific_10(4.25e-8), scientific_10(4.75e-8), scientific_10(5.25e-8) ),name="Normalized\nsharing\n ", direction = 1)
   library(gridExtra)
   library(grid)
   pp1<-grid.arrange(px, p, ncol=1, heights=c(2,6))
@@ -241,18 +247,20 @@ make_scatter <- function(DR_data_csv) {
     theme(panel.grid.minor.y = element_blank())+
     theme(panel.grid.minor.x = element_blank())+
     scale_fill_manual(values = c("#052F5F", "#F9C80E"), labels=c("not changed\nclones\n ", "changed clones"), name="Legend\nname")+
-    theme(legend.title = element_text(size=22, face="bold"))+
+    theme(legend.title = element_text(size=24, face="bold"))+
     #theme(axis.title.x = element_blank())+
     theme(legend.position = "none")+
-    theme(axis.text.x = element_text(size=22, color="black"))+
-    theme(axis.text.y = element_text(size=22, color="black"))+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2, 'lines'))+
     ylab(label=expression(paste(log[10]," clone frequency ", "in bulk CD8"^"+")))+
     xlab(label=expression(paste(log[10]," clone frequency ","in CD8"^"+","CD38"^"+","HLA-DR"^"+")))+
     theme(legend.text = element_text(size=22, color="black"))+
-    theme(axis.title.y = element_text(size=23))+
-    theme(axis.title.x = element_text(size=23))+
-      geom_abline(slope = 1, intercept = 0, size=1.3)
+    theme(axis.title.y = element_text(size=23.5))+
+    theme(axis.title.x = element_text(size=23.5))+
+      geom_abline(slope = 1, intercept = 0, size=1.3)+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))
+    
 }
 #make histogram plot
 make_histplot <- function(histdatacsv2) {
@@ -268,12 +276,12 @@ make_histplot <- function(histdatacsv2) {
     scale_fill_manual(values = c("#052F5F", "#F9C80E"), name="Epitope\nsource")+
     theme(legend.title = element_text(size=24, face="bold"))+
     #theme(axis.title.x = element_blank())+
-    theme(axis.text.x = element_text(size=22, color="black"))+
-    theme(axis.text.y = element_text(size=22, color="black"))+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2, 'lines'))+
     ylab(label = "Fraction of clonotypes")+
     xlab(label="Mismatches to the nearest neighbour")+
-    theme(legend.text = element_text(size=24, color="black"))+
+    theme(legend.text = element_text(size=22, color="black"))+
     theme(axis.title.y = element_text(size=26))+
     theme(axis.title.x = element_text(size=26))+
     scale_y_continuous(expand=c(0,0), limits=c(0, 0.31), breaks=c(0,0.1, 0.2, 0.3), labels=c(0,0.1, 0.2, 0.3))+
@@ -302,8 +310,8 @@ make_roc_tw <- function(roc_data) {
     theme(legend.key = element_rect(size = 15),legend.key.size = unit(2.5, 'lines'))+
     theme(legend.text = element_text(size=22, color="black"))+
     theme(axis.title.y = element_text(size=26))+
-    theme(axis.text.x = element_text(size=22, color="black"))+
-    theme(axis.text.y = element_text(size=22, color="black"))+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
     geom_abline(slope = 1, intercept = 0, size=1)+
     ggtitle("C.")+
     theme(plot.title = element_text(size=30, face="bold"))+
@@ -327,8 +335,8 @@ make_roc_tet <- function(roc_data) {
     theme(axis.title.x = element_text(size=26))+
     ylab("Sensitivity")+
     theme(axis.title.y = element_text(size=26))+
-    theme(axis.text.x = element_text(size=22, color="black"))+
-    theme(axis.text.y = element_text(size=22, color="black"))+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
     geom_abline(slope = 1, intercept = 0, size=1)+
     ggtitle("B.")+
     theme(plot.title = element_text(size=30, face="bold"))
