@@ -23,14 +23,14 @@ scientific_10 <- function(x) {
 
 #Barplots for diff between day0 and other days, place name of the file in the first function
 
-make_barplot <- function(x, plotname, uplim=1600) {
+make_barplot <- function(x, uplim=1600) {
   num_DE_clones<-fread(x)
   num_DE_clones<-melt(num_DE_clones)
   
   
   ggplot(num_DE_clones, aes(variable, value, group=V1))+
     geom_bar(aes(fill = V1), stat = "identity", position = "dodge", width=0.8, color="black", size=0.2)+
-    scale_fill_manual(values = my_six_colors, name="donor\n ")+
+    scale_fill_manual(values = my_six_colors, name="donor")+
     theme_light()+
     scale_y_continuous(expand=c(0,0), limits = c(0, uplim))+
     theme(panel.grid.major.x = element_blank())+
@@ -42,14 +42,14 @@ make_barplot <- function(x, plotname, uplim=1600) {
     scale_x_discrete(labels = c("day -7", "day 7", "day 15", "day 45"))+
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
-    theme(legend.text = element_text(size=20, color="black"))+
-    ggtitle(plotname)+
-    theme(plot.title = element_text(hjust = 0.5, size=20))
+    theme(legend.text = element_text(size=20, color="black"))
+    # ggtitle(plotname)+
+    # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
 
 #Lineplots for CD4 CD8 dynamics
 
-make_lineplot <- function(CD4, CD8, plotname) {
+make_lineplot <- function(CD4, CD8) {
   CD4_clones<-read.csv(CD4)
   CD8_clones<-read.csv(CD8)
   CD8_clones<-melt(CD8_clones)
@@ -67,7 +67,7 @@ make_lineplot <- function(CD4, CD8, plotname) {
     facet_wrap(~CD)+
     theme_light()+
     scale_x_continuous(breaks = c(0, 7,15,  45), labels = c("0", "7", "15", "45"))+
-    scale_y_continuous(breaks = c(0, 0.01, 0.02, 0.03, 0.04), labels = c(0, 0.01, 0.02, 0.03, 0.04))+
+    scale_y_continuous(breaks = c(0, 0.025, 0.05, 0.075), labels = c(0, 0.025, 0.05, 0.075))+
     theme(panel.grid.minor.x = element_blank())+
     theme(panel.grid.minor.y = element_blank())+
     theme(panel.grid.major.x = element_line(linetype="dashed"))+
@@ -85,14 +85,14 @@ make_lineplot <- function(CD4, CD8, plotname) {
     theme(legend.text = element_text(size=20, color="black"))+
     theme(axis.title.y = element_text(size=22))+
     theme(axis.text.x = element_text(size=18, color="black"))+
-    theme(axis.text.y = element_text(size=16, color="black"))+
-    ggtitle(plotname)+
-    theme(plot.title = element_text(hjust = 0.5, size=20))
+    theme(axis.text.y = element_text(size=16, color="black"))
+    # ggtitle(plotname)+
+    # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
 
 #Make Pointrange plots about shared tcrs
 
-make_pointrange <- function(filename, plotname) {
+make_pointrange <- function(filename) {
   
   shVJ_tbl<-read.csv(filename)
   shVJ_tbl<-shVJ_tbl[shVJ_tbl$Uniq==T, ]
@@ -122,15 +122,15 @@ make_pointrange <- function(filename, plotname) {
     #theme(legend.background = element_rect(size=0.8, linetype="solid", colour = "black"))+
     theme(legend.text = element_text(size=10, face="bold"))+
     scale_y_continuous(labels=c("0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5), scientific_10(4e-5)))+
-    theme(axis.text.y = element_text(size=12, face="bold", colour = "black"))+
-    ggtitle(plotname)+
-    theme(plot.title = element_text(hjust = 0.5, size=20))
+    theme(axis.text.y = element_text(size=12, face="bold", colour = "black"))
+    # ggtitle(plotname)+
+    # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
 
 
 #Plots for similarity
 
-make_similarity_plot <- function(filename, plotname) {
+make_similarity_plot <- function(filename) {
   load(filename)
   data<-as.data.frame(data)
   data$wat<-rep("data", times=ncol(data))
@@ -159,7 +159,7 @@ make_similarity_plot <- function(filename, plotname) {
     theme_light()+
     theme(panel.grid.major.x = element_blank())+
     facet_wrap(~variable)+
-    scale_fill_manual(values = c("#F9C80E", "#052F5F" ), labels=c("real\ndata", "simulated\ndata"), name=" name")+
+    scale_fill_manual(values = c("#F9C80E", "#052F5F" ), labels=c("YF\nspecific", "random"), name=" name")+
     theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
     theme(strip.text = element_text(colour="black", face="bold", size=17))+
     theme(axis.title.x = element_blank())+
@@ -170,40 +170,18 @@ make_similarity_plot <- function(filename, plotname) {
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
     theme(legend.text = element_text(size=20, color="black"))+
-    ylab(label = "Title y")+
-    theme(axis.title.y = element_text(size=22, face="bold"))+
-  ggtitle(plotname)+
-    theme(plot.title = element_text(hjust = 0.5, size=20))+
-    scale_x_discrete(labels=c("real\ndata", "simulated\ndata"))
+    ylab(label=expression(atop(paste(log[10]," normalized number"), "of similar CDR3aa sequencies")))+
+    theme(axis.title.y = element_text(size=22))+
+  # ggtitle(plotname)+
+  #   theme(plot.title = element_text(hjust = 0.5, size=20))+
+    scale_x_discrete(labels=c("YF\nspecific", "random"))
 }
 
 #color palette two #440154FF or #482677FF and #29AF7FFF or #3CBB75FF    "#3D9637"
-#make histogram plot
-make_histplot <- function(histdatacsv2) {
-  histplot<-read.csv2(histdatacsv2)
-  histplot<-select(histplot, 2:4)
-  histplot2<-data.frame(mismatches=c(histplot$mismatches, histplot$mismatches), Freq=c(histplot$YF_LLW.Freq, histplot$CMV_NLV.Freq),antigen=c(rep("YF",times=21),rep("CMV",times=21)),stringsAsFactors = F)
-  ggplot(histplot2, aes(mismatches, Freq, fill=antigen))+geom_histogram(stat="identity", position = "dodge", color="black")+
-    theme_light()+
-    theme(panel.grid.major.x = element_blank())+
-    theme(panel.grid.minor.x = element_blank())+
-    scale_fill_manual(values = c("#052F5F", "#F9C80E"), name="Legend\nname")+
-    theme(legend.title = element_text(size=22, face="bold"))+
-    #theme(axis.title.x = element_blank())+
-    theme(axis.text.x = element_text(size=22, color="black"))+
-    theme(axis.text.y = element_text(size=22, color="black"))+
-    theme(legend.key = element_rect(size = 20),legend.key.size = unit(2, 'lines'))+
-    ylab(label = "Title y")+
-    xlab(label="Title x")+
-    theme(legend.text = element_text(size=22, color="black"))+
-    theme(axis.title.y = element_text(size=24, face="bold"))+
-    theme(axis.title.x = element_text(size=24, face="bold"))+
-    scale_y_continuous(expand=c(0,0), limits=c(0, 101))+
-    scale_x_continuous( breaks = c(0:12), limits=c(0,13))
-}
+
 
 #Heatmap
-make_heatmap <- function(data_heat_csv, plotname) {
+make_heatmap <- function(data_heat_csv) {
   heatmap_gr<-read.csv(data_heat_csv)
   sht<-as.matrix(heatmap_gr[, 2:7])
   rownames(sht)<-heatmap_gr[,1]
@@ -236,7 +214,7 @@ make_heatmap <- function(data_heat_csv, plotname) {
   p <- ggplot(mdf, aes(x = car, y = variable)) + geom_tile(aes(fill = value))+theme_minimal()+
     scale_y_discrete(expand=c(0,0))+
     scale_x_discrete(expand=c(0,0))+
-    theme(plot.margin = unit(c(0,1,0,1), "cm"))+
+    theme(plot.margin = unit(c(0,1,1,1), "cm"))+
     theme(axis.title.x = element_blank())+
     theme(axis.title.y = element_blank())+
     theme(axis.text.x = element_text(size=24, color="black"))+
@@ -244,12 +222,12 @@ make_heatmap <- function(data_heat_csv, plotname) {
     theme(legend.text = element_text(colour="black", size = 24,  hjust = 1))+
     theme(legend.title=element_text(colour="black", size = 24, face = "bold"))+
     theme(legend.text.align=0)+
-    theme(legend.key = element_rect(size = 22),legend.key.size = unit(2, 'lines'))
-    #scale_fill_viridis( na.value = "grey60",breaks=c(0, 1e-5, 2e-5, 3e-5), labels=c(" 0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5)),
-                        #name="Probability\n ", direction = 1)
+    theme(legend.key = element_rect(size = 22),legend.key.size = unit(2, 'lines'))+
+    scale_fill_viridis( na.value = "grey60",breaks=c(0, 1e-5, 2e-5, 3e-5), labels=c(" 0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5)),
+                        name="Normalized\nsharing\n ", direction = 1)
   library(gridExtra)
   library(grid)
-  pp1<-grid.arrange(px, p, ncol=1, heights=c(2,6), top=plotname)
+  pp1<-grid.arrange(px, p, ncol=1, heights=c(2,6))
   pp1
 }
 
@@ -258,46 +236,108 @@ make_heatmap <- function(data_heat_csv, plotname) {
 make_scatter <- function(DR_data_csv) {
   plot<-read.csv(DR_data_csv)
   ggplot(plot, aes(log10(DRhi.Read.proportion), log10(CD8.Read.proportion), fill=changed))+
-    geom_point(size=3.8, color="black", shape=21, alpha=0.75)+
+    geom_point(size=3.8, color="black", shape=21, alpha=0.8)+
     theme_light()+
     theme(panel.grid.minor.y = element_blank())+
     theme(panel.grid.minor.x = element_blank())+
     scale_fill_manual(values = c("#052F5F", "#F9C80E"), labels=c("not changed\nclones\n ", "changed clones"), name="Legend\nname")+
     theme(legend.title = element_text(size=22, face="bold"))+
     #theme(axis.title.x = element_blank())+
+    theme(legend.position = "none")+
     theme(axis.text.x = element_text(size=22, color="black"))+
     theme(axis.text.y = element_text(size=22, color="black"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2, 'lines'))+
-    ylab(label = "Title y")+
-    xlab(label="Title x")+
+    ylab(label=expression(paste(log[10]," clone frequency ", "in bulk CD8"^"+")))+
+    xlab(label=expression(paste(log[10]," clone frequency ","in CD8"^"+","CD38"^"+","HLA-DR"^"+")))+
     theme(legend.text = element_text(size=22, color="black"))+
-    theme(axis.title.y = element_text(size=24, face="bold"))+
-    theme(axis.title.x = element_text(size=24, face="bold"))+
+    theme(axis.title.y = element_text(size=23))+
+    theme(axis.title.x = element_text(size=23))+
       geom_abline(slope = 1, intercept = 0, size=1.3)
 }
+#make histogram plot
+make_histplot <- function(histdatacsv2) {
+  histplot<-read.csv2(histdatacsv2)
+  histplot<-select(histplot, 2:4)
+  histplot2<-data.frame(mismatches=c(histplot$mismatches, histplot$mismatches), Freq=c(histplot$YF_LLW.Freq, histplot$CMV_NLV.Freq),antigen=c(rep("YF",times=21),rep("CMV",times=21)),stringsAsFactors = F)
+  histplot2$Freq[histplot2$antigen=="YF"]<-histplot2$Freq[histplot2$antigen=="YF"]/sum(histplot2$Freq[histplot2$antigen=="YF"])
+  histplot2$Freq[histplot2$antigen=="CMV"]<-histplot2$Freq[histplot2$antigen=="CMV"]/sum(histplot2$Freq[histplot2$antigen=="CMV"])
+  ggplot(histplot2, aes(mismatches, Freq, fill=antigen))+geom_histogram(stat="identity", position = "dodge", color="black")+
+    theme_light()+
+    theme(panel.grid.major.x = element_blank())+
+    theme(panel.grid.minor.x = element_blank())+
+    scale_fill_manual(values = c("#052F5F", "#F9C80E"), name="Epitope\nsource")+
+    theme(legend.title = element_text(size=24, face="bold"))+
+    #theme(axis.title.x = element_blank())+
+    theme(axis.text.x = element_text(size=22, color="black"))+
+    theme(axis.text.y = element_text(size=22, color="black"))+
+    theme(legend.key = element_rect(size = 20),legend.key.size = unit(2, 'lines'))+
+    ylab(label = "Fraction of clonotypes")+
+    xlab(label="Mismatches to the nearest neighbour")+
+    theme(legend.text = element_text(size=24, color="black"))+
+    theme(axis.title.y = element_text(size=26))+
+    theme(axis.title.x = element_text(size=26))+
+    scale_y_continuous(expand=c(0,0), limits=c(0, 0.31), breaks=c(0,0.1, 0.2, 0.3), labels=c(0,0.1, 0.2, 0.3))+
+    scale_x_continuous( breaks = c(0:12), limits=c(0,13))+
+    ggtitle("A.")+
+    theme(plot.title = element_text(size=30, face="bold"))+
+    theme(legend.justification=c(1,1), legend.position=c(1,1))+
+    theme(legend.box.background = element_rect(colour = "black", size=2))
+}
+#Roc for twins
+make_roc_tw <- function(roc_data) {
+  roc<-read.csv(roc_data)
 
-#Roc
-roc<-read.csv("fig_data/leave_one_out_roc.csv")
-roc_tet<-read.csv("fig_data/tet_roc.csv")
-ggplot(roc, aes(1-specificity, sensitivity,col=donor))+
-  geom_line(size=1.5, aes(color=donor))+
-  theme_light()+
-  scale_x_continuous(expand=c(0,0), limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
-  scale_y_continuous(expand=c(0,0), limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
-  theme(panel.grid.minor.x = element_blank())+
-  theme(panel.grid.minor.y = element_blank())+
-  xlab(label = "1-Specificity")+
-  theme(axis.title.x = element_text(size=22))+
-  ylab("Sensitivity")+
-  scale_color_manual(values = c(my_six_colors))+
-  theme(legend.title = element_text(size=24, face="bold"))+
-  theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
-  theme(legend.text = element_text(size=20, color="black"))+
-  theme(axis.title.y = element_text(size=22))+
-  theme(axis.text.x = element_text(size=18, color="black"))+
-  theme(axis.text.y = element_text(size=16, color="black"))+
-  geom_abline(slope = 1, intercept = 0, size=1)
+  ggplot(roc, aes(1-specificity, sensitivity,col=donor))+
+    geom_line(size=1.5, aes(color=donor))+
+    theme_light()+
+    scale_x_continuous( limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
+    scale_y_continuous(expand=c(0,0), limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
+    theme(panel.grid.minor.x = element_blank())+
+    theme(panel.grid.minor.y = element_blank())+
+    xlab(label = "1-Specificity")+
+    theme(axis.title.x = element_text(size=26))+
+    ylab("Sensitivity")+
+    scale_color_manual(values = c(my_six_colors))+
+    theme(legend.title = element_text(size=24, face="bold"))+
+    theme(legend.key = element_rect(size = 15),legend.key.size = unit(2.5, 'lines'))+
+    theme(legend.text = element_text(size=22, color="black"))+
+    theme(axis.title.y = element_text(size=26))+
+    theme(axis.text.x = element_text(size=22, color="black"))+
+    theme(axis.text.y = element_text(size=22, color="black"))+
+    geom_abline(slope = 1, intercept = 0, size=1)+
+    ggtitle("C.")+
+    theme(plot.title = element_text(size=30, face="bold"))+
+    theme(legend.justification=c(1,0), legend.position=c(1,0))+
+    theme(legend.box.background = element_rect(colour = "black", size=2))
+    
+}
   
-  ggtitle(plotname)+
-  theme(plot.title = element_text(hjust = 0.5, size=20))
+#Roc for tetramer
+
+make_roc_tet <- function(roc_data) {
+  roc_tet<-read.csv(roc_data)
+  ggplot(roc_tet, aes(1-specificity, sensitivity))+
+    geom_line(size=1.5, col="#052F5F")+
+    theme_light()+
+    scale_x_continuous(limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
+    scale_y_continuous(expand=c(0,0), limits = c(0,1), labels=c(0, 0.25, 0.5, 0.75, 1))+
+    theme(panel.grid.minor.x = element_blank())+
+    theme(panel.grid.minor.y = element_blank())+
+    xlab(label = "1-Specificity")+
+    theme(axis.title.x = element_text(size=26))+
+    ylab("Sensitivity")+
+    theme(axis.title.y = element_text(size=26))+
+    theme(axis.text.x = element_text(size=22, color="black"))+
+    theme(axis.text.y = element_text(size=22, color="black"))+
+    geom_abline(slope = 1, intercept = 0, size=1)+
+    ggtitle("B.")+
+    theme(plot.title = element_text(size=30, face="bold"))
+    
+}
   
+#arrange hist and rocs save as 7 21
+pl1<-make_histplot("fig_data/hist_data.csv")
+pl2<-make_roc_tet("fig_data/tet_roc.csv")
+pl3<-make_roc_tw("fig_data/leave_one_out_roc.csv")
+grid.arrange(pl1, pl2,pl3, ncol=3)
+
