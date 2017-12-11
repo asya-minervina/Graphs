@@ -14,8 +14,8 @@ library(viridis)
 
 load("C:/Users/Asya/Dropbox/YF_gr/Fig_data/donor_list_rev.rda")
 d_rename<-donor_list_rev
-#make six color pallete #1395BA-light blue; #0D3C55-dark blue; #F16C20-orange; #A2B86C-green; #C02E1D-red; #EBC844-yellow
-my_six_colors<-c("#0D3C55","#1395BA", "#C02E1D", "#F16C20", "#A2B86C", "#EBC844")
+#make six color pallete #1395BA-light blue; #0D3C55-dark blue; #F16C20-orange; #99BA46-green; #C02E1D-red; #EBC844-yellow   3C6628-dark green
+my_six_colors<-c("#0D3C55","#1395BA", "#C02E1D","#F16C20","#3C6628","#99BA46")
 
 #color palette two #440154FF or #482677FF and #29AF7FFF or #3CBB75FF
 #red and grey c( "#2B2D42", "#D90429")
@@ -83,7 +83,7 @@ make_lineplot <- function(CD4, CD8, err4, err8) {
   CD_clones$error<-CD_err$error
   CD_clones$ymin<-CD_clones$value-CD_clones$error
   CD_clones$ymax<-CD_clones$value+CD_clones$error
- 
+  
   ggplot(CD_clones, aes(variable, value, group=donor, color=donor))+
     geom_line(size=2.2, aes(color=donor))+
     geom_errorbar(data=CD_clones, aes(ymin=ymin, ymax=ymax),  width=0.5, size=1)+
@@ -91,6 +91,7 @@ make_lineplot <- function(CD4, CD8, err4, err8) {
     theme_light()+
     scale_x_continuous(breaks = c(0, 7,15,  45), labels = c("0", "7", "15", "45"))+
     scale_y_continuous(breaks = c(0, 0.025, 0.05, 0.075), labels = c(0, 0.025, 0.05, 0.075))+
+    #scale_y_continuous(breaks=c(-4, -3, -2, -1),labels=c(scientific_10(1e-4), scientific_10(1e-3),scientific_10(1e-2),scientific_10(1e-1)))+
     theme(panel.grid.minor.x = element_blank())+
     theme(panel.grid.minor.y = element_blank())+
     theme(panel.grid.major.x = element_line(linetype="dashed"))+
@@ -110,18 +111,76 @@ make_lineplot <- function(CD4, CD8, err4, err8) {
     theme(axis.text.x = element_text(size=24, color="black"))+
     theme(axis.text.y = element_text(size=24, color="black"))+
     theme(plot.margin = unit(c(1,1,1,1), "cm"))
+  # ggtitle(plotname)+
+  # theme(plot.title = element_text(hjust = 0.5, size=20))
+}
+
+make_log10_lineplot <- function(CD4, CD8, err4, err8) {
+  CD4_clones<-read.csv(CD4)
+  CD8_clones<-read.csv(CD8)
+  CD4err<-read.csv(err4)
+  CD8err<-read.csv(err8)
+  CD8err<-melt(CD8err)
+  CD4err<-melt(CD4err)
+  CD8err$CD<-"CD8"
+  CD4err$CD<-"CD4"
+  CD_err<-rbind(CD4err, CD8err)
+  colnames(CD_err)<-c("donor", "var", "error", "CD")
+  CD8_clones<-melt(CD8_clones)
+  CD4_clones<-melt(CD4_clones)
+  CD8_clones$CD<-"CD8"
+  CD4_clones$CD<-"CD4"
+  colnames(CD8_clones)<-c("donor", "variable", "value", "CD")
+  colnames(CD4_clones)<-c("donor", "variable", "value", "CD")
+  CD_clones<-rbind(CD4_clones, CD8_clones)
+  CD_clones$variable<-str_replace_all(CD_clones$variable, "d", "")
+  CD_clones$variable<-as.numeric(CD_clones$variable)
+  CD_clones$donor<-as.character(CD_clones$donor)
+  CD_clones$donor<-d_rename[CD_clones$donor]
+  CD_clones$error<-CD_err$error
+  CD_clones$ymin<-CD_clones$value-CD_clones$error
+  CD_clones$ymax<-CD_clones$value+CD_clones$error
+ 
+  ggplot(CD_clones, aes(variable, log10(value), group=donor, color=donor))+
+    geom_line(size=2.2, aes(color=donor))+
+    geom_errorbar(data=CD_clones, aes(ymin=log10(ymin), ymax=log10(ymax)),  width=0.5, size=1)+
+    facet_wrap(~CD)+
+    theme_light()+
+    scale_x_continuous(breaks = c(0, 7,15,  45), labels = c("0", "7", "15", "45"))+
+    #scale_y_continuous(breaks = c(0, 0.025, 0.05, 0.075), labels = c(0, 0.025, 0.05, 0.075))+
+    scale_y_continuous(breaks=c(-4, -3, -2, -1),labels=c(scientific_10(1e-4), scientific_10(1e-3),scientific_10(1e-2),scientific_10(1e-1)))+
+    theme(panel.grid.minor.x = element_blank())+
+    theme(panel.grid.minor.y = element_blank())+
+    theme(panel.grid.major.x = element_line(linetype="dashed"))+
+    geom_point(size=4, color="white", shape=21, aes(fill=donor))+
+    theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
+    theme(strip.text = element_text(colour="black", face="bold", size=20))+
+    ylab(label = "Fraction of YF17D-specific cells\n")+
+    theme(axis.title.x = element_text(size=26))+
+    xlab("Days after vaccination")+
+    theme(panel.spacing.x = unit(2, "lines"))+
+    scale_color_manual(values = my_six_colors)+
+    scale_fill_manual(values = my_six_colors)+
+    theme(legend.title = element_text(size=24, face="bold"))+
+    theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
+    theme(legend.text = element_text(size=22, color="black"))+
+    theme(axis.title.y = element_text(size=26))+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))
     # ggtitle(plotname)+
     # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
-#CD4_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD4.csv")
-#CD8_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv")
-#CD4err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv")
-#CD8err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
+CD4_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv")
+CD8_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv")
+CD4err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv")
+CD8err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
 make_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD8.csv",
               "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv","C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv" )
-make_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8.csv", 
+make_log10_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8.csv", 
               "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
-
+make_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8.csv", 
+                    "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
 
 #Make Pointrange plots about shared tcrs
 
@@ -174,6 +233,15 @@ make_similarity_plot <- function(filename) {
   data2$rowname<-gsub(pattern = "_15_F1", replacement = "", x = data2$rowname)
   simul_sd<-as.data.frame(simul_sd)
   data2<-as.data.frame(melt(data2))
+  n<-c(174,103,169)/(256*(256-1)/2)
+  b<-c("data", "data", "data")
+  a<-c("V1", "V2", "V3")
+  f<-c("tet", "tet", "tet")
+  df<-data.frame(f, b, a, n)
+  colnames(df)<-colnames(data2)
+  data2<-rbind(data2, df)
+  data2$wat2<-data2$wat
+  data2$wat2[data2$rowname=="tet"]<-"tet"
   data2$sd<-rep(0, times=nrow(data2))
   data2$sd[data2$wat=="simul"&data2$variable=="V1"]<-simul_sd$V1
   data2$sd[data2$wat=="simul"&data2$variable=="V2"]<-simul_sd$V2
@@ -186,13 +254,17 @@ make_similarity_plot <- function(filename) {
   data3$variable<-str_replace_all(string = data3$variable, pattern = "V1", replacement = "0 mismatches")
   data3$variable<-str_replace_all(string = data3$variable, pattern = "V2", replacement = "1 mismatch")
   data3$variable<-str_replace_all(string = data3$variable, pattern = "V3", replacement = "2 mismatches")
+  data3$value[data3$rowname=="tet"]<-n
+  data3$sd[data3$rowname=="tet"]<-0
+  data3$ymax[data3$rowname=="tet"]<-log10(n)
+  data3$ymin[data3$rowname=="tet"]<-log10(n)
   
-  ggplot(data3, aes(wat, log10(value), fill=wat))+
+  ggplot(data3, aes(wat, log10(value), fill=wat2))+
     geom_pointrange(data=data3, aes(wat, log10(value), ymin=ymin, ymax=ymax),position = position_jitter(width = 0.4, height = 0), size=1, shape=21, color="#052F5F")+
     theme_light()+
     theme(panel.grid.major.x = element_blank())+
     facet_wrap(~variable)+
-    scale_fill_manual(values = c("#F9C80E", "#052F5F" ), labels=c("YF\nspecific", "random"), name=" name")+
+    scale_fill_manual(values = c("#F9C80E", "#052F5F", "#CC0014" ), labels=c("YF\nspecific", "random"), name=" name")+
     theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
     theme(strip.text = element_text(colour="black", face="bold", size=17))+
     theme(axis.title.x = element_blank())+
@@ -207,11 +279,12 @@ make_similarity_plot <- function(filename) {
     ylab(label="Normalized number of\nsimilar CDR3aa sequences\n")+
     theme(axis.title.y = element_text(size=26))+
     theme(plot.margin = unit(c(1,1,1,1), "cm"))+
-    scale_y_continuous(breaks=c(-6, -5, -4, -3), labels=c(scientific_10(1e-6), scientific_10(1e-5),scientific_10(1e-4),scientific_10(1e-3)))+
+    scale_y_continuous(breaks=c(-6, -5, -4, -3, -2), labels=c(scientific_10(1e-6), scientific_10(1e-5),scientific_10(1e-4),scientific_10(1e-3), scientific_10(1e-2)))+
   # ggtitle(plotname)+
   #   theme(plot.title = element_text(hjust = 0.5, size=20))+
     scale_x_discrete(labels=c("YF\nspecific", "random"))
 }
+
 make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_edger.rda")
 make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_max.rda")
 
