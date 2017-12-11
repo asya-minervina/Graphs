@@ -522,3 +522,51 @@ make_sharing_plot <- function(sharing, total) {
     
 }
 make_sharing_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/shar_Max.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/shar_total.csv")
+
+make_stacked_barplot <- function(x) {
+  cd48<-fread(x)
+  cd48<-melt(cd48)
+  cd48$V1<-d_rename[cd48$V1]
+  ggplot(cd48, aes(V1, value, fill=variable))+
+    geom_bar(stat="identity", position="fill", width=0.8, color="black", size=0.2)+
+    scale_fill_manual(values = c("#052F5F", "#CC0014"), name="")+
+    theme_light()+
+    scale_y_continuous(expand=c(0,0), labels=c(0, 0.25, 0.5, 0.75, 1))+
+    theme(panel.grid.major.x = element_blank())+
+    theme(axis.title.x = element_blank())+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
+    ylab(label = "Fraction")+
+    theme(axis.title.y = element_text(size=26))+
+    #scale_x_discrete(labels = c("day -7", "day 7", "day 15", "day 45"))+
+    theme(legend.title = element_text(size=24, face="bold"))+
+    theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
+    theme(legend.text = element_text(size=22, color="black"))+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))
+  # ggtitle(plotname)+
+  # theme(plot.title = element_text(hjust = 0.5, size=20))
+}
+
+make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/specific_CD4_CD8_counts.csv")
+make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/specific_CD4_CD8_cumulative.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
