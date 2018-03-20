@@ -14,6 +14,7 @@ library(viridis)
 
 load("C:/Users/Asya/Dropbox/YF_gr/Fig_data/donor_list_rev.rda")
 d_rename<-donor_list_rev
+d_rename<-sort(d_rename)
 #make six color pallete #1395BA-light blue; #0D3C55-dark blue; #F16C20-orange; #99BA46-green; #C02E1D-red; #EBC844-yellow   3C6628-dark green
 my_six_colors<-c("#0D3C55","#1395BA", "#C02E1D","#F16C20","#3C6628","#99BA46")
 
@@ -29,7 +30,7 @@ scientific_10 <- function(x) {
 #save as 7 9 inches
 
 make_barplot <- function(x, uplim=1600) {
-  num_DE_clones<-fread(x)
+  num_DE_clones<-fread(x, stringsAsFactors = F)
   num_DE_clones<-melt(num_DE_clones)
   num_DE_clones$V1<-d_rename[num_DE_clones$V1]
   ggplot(num_DE_clones, aes(variable, value, group=V1))+
@@ -55,14 +56,14 @@ make_barplot <- function(x, uplim=1600) {
 #num_DE_clones<-fread("C:/Users/Asya/Dropbox/YF_gr/Fig_data/edger_res.csv")
 #num_DE_clones<-melt(num_DE_clones)
 make_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/edger_res.csv", uplim = 1200)
-make_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/Max_thres.csv", uplim = 1700)
+make_barplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/Max_thres.csv", uplim = 1700)
 #Lineplots for CD4 CD8 dynamics
 
 make_lineplot <- function(CD4, CD8, err4, err8) {
-  CD4_clones<-read.csv(CD4)
-  CD8_clones<-read.csv(CD8)
-  CD4err<-read.csv(err4)
-  CD8err<-read.csv(err8)
+  CD4_clones<-read.csv(CD4, stringsAsFactors = F)
+  CD8_clones<-read.csv(CD8, stringsAsFactors = F)
+  CD4err<-read.csv(err4, stringsAsFactors = F)
+  CD8err<-read.csv(err8, stringsAsFactors = F)
   CD8err<-melt(CD8err)
   CD4err<-melt(CD4err)
   CD8err$CD<-"CD8"
@@ -116,10 +117,10 @@ make_lineplot <- function(CD4, CD8, err4, err8) {
 }
 
 make_log10_lineplot <- function(CD4, CD8, err4, err8) {
-  CD4_clones<-read.csv(CD4)
-  CD8_clones<-read.csv(CD8)
-  CD4err<-read.csv(err4)
-  CD8err<-read.csv(err8)
+  CD4_clones<-read.csv(CD4, stringsAsFactors = F)
+  CD8_clones<-read.csv(CD8, stringsAsFactors = F)
+  CD4err<-read.csv(err4, stringsAsFactors = F)
+  CD8err<-read.csv(err8, stringsAsFactors = F)
   CD8err<-melt(CD8err)
   CD4err<-melt(CD4err)
   CD8err$CD<-"CD8"
@@ -171,16 +172,16 @@ make_log10_lineplot <- function(CD4, CD8, err4, err8) {
     # ggtitle(plotname)+
     # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
-CD4_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv")
-CD8_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv")
-CD4err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv")
-CD8err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
+CD4_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv")
+CD8_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv")
+CD4err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4_err.csv")
+CD8err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8_err.csv")
 make_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD8.csv",
               "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv","C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv" )
-make_log10_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8.csv", 
-              "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
-make_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8.csv", 
-                    "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
+make_log10_lineplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8.csv", 
+              "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
+make_lineplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8.csv", 
+              "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
 
 #Make Pointrange plots about shared tcrs
 
@@ -233,7 +234,7 @@ make_similarity_plot <- function(filename) {
   data2$rowname<-gsub(pattern = "_15_F1", replacement = "", x = data2$rowname)
   simul_sd<-as.data.frame(simul_sd)
   data2<-as.data.frame(melt(data2))
-  n<-c(174,103,169)/(256*(256-1)/2)
+  n<-c(174,277,446)/(256*(256-1)/2)
   b<-c("data", "data", "data")
   a<-c("V1", "V2", "V3")
   f<-c("tet", "tet", "tet")
@@ -259,12 +260,13 @@ make_similarity_plot <- function(filename) {
   data3$ymax[data3$rowname=="tet"]<-log10(n)
   data3$ymin[data3$rowname=="tet"]<-log10(n)
   
-  ggplot(data3, aes(wat, log10(value), fill=wat2))+
-    geom_pointrange(data=data3, aes(wat, log10(value), ymin=ymin, ymax=ymax),position = position_jitter(width = 0.4, height = 0), size=1, shape=21, color="#052F5F")+
+  ggplot(data3[data3$wat2!="tet", ], aes(wat, log10(value), fill=wat2))+
+    geom_pointrange(data=data3[data3$wat2!="tet", ], aes(wat, log10(value), ymin=ymin, ymax=ymax),position = position_jitter(width = 0.4, height = 0), size=1, shape=21, color="#052F5F")+
     theme_light()+
+    stat_summary(fun.y = mean, fun.ymin = mean, fun.ymax = mean,geom = "crossbar", width = 0.5)+
     theme(panel.grid.major.x = element_blank())+
     facet_wrap(~variable)+
-    scale_fill_manual(values = c("#F9C80E", "#052F5F", "#CC0014" ), labels=c("YF\nspecific", "random"), name=" name")+
+    scale_fill_manual(values = c("#F9C80E", "#052F5F", "#CC0014"), labels=c("YF\nspecific", "random"), name=" name")+
     theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
     theme(strip.text = element_text(colour="black", face="bold", size=17))+
     theme(axis.title.x = element_blank())+
@@ -275,18 +277,20 @@ make_similarity_plot <- function(filename) {
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
     theme(legend.text = element_text(size=22, color="black"))+
-    #ylab(label=expression(atop(paste(log[10]," normalized number"), "of similar CDR3aa sequencies")))+
+    
     ylab(label="Normalized number of\nsimilar CDR3aa sequences\n")+
     theme(axis.title.y = element_text(size=26))+
     theme(plot.margin = unit(c(1,1,1,1), "cm"))+
     scale_y_continuous(breaks=c(-6, -5, -4, -3, -2), labels=c(scientific_10(1e-6), scientific_10(1e-5),scientific_10(1e-4),scientific_10(1e-3), scientific_10(1e-2)))+
-  # ggtitle(plotname)+
-  #   theme(plot.title = element_text(hjust = 0.5, size=20))+
-    scale_x_discrete(labels=c("YF\nspecific", "random"))
+    # ggtitle(plotname)+
+    #   theme(plot.title = element_text(hjust = 0.5, size=20))+
+    scale_x_discrete(labels=c("YF\nspecific", "random"))+
+    geom_point(data=data3[data3$wat2=="tet", ], mapping=aes(wat, log10(value)),size=4, shape=21, color="#052F5F")
 }
 
+
 make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_edger.rda")
-make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_max.rda")
+make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/similarity_max.rda")
 
 
 #color palette two #440154FF or #482677FF and #29AF7FFF or #3CBB75FF    "#3D9637"
@@ -294,7 +298,7 @@ make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_max.rda")
 
 #Heatmap
 make_heatmap <- function(data_heat_csv) {
-  heatmap_gr<-read.csv(data_heat_csv)
+  heatmap_gr<-read.csv(data_heat_csv, stringsAsFactors = F)
   sht<-as.matrix(heatmap_gr[, 2:7])
   rownames(sht)<-heatmap_gr[,1]
   row.names(sht)<-gsub("_0_F1","",row.names(sht))
@@ -338,23 +342,24 @@ make_heatmap <- function(data_heat_csv) {
     theme(legend.title=element_text(colour="black", size = 24, face = "bold"))+
     theme(legend.text.align=0)+
     theme(legend.key = element_rect(size = 22),legend.key.size = unit(2.5, 'lines'))+
-    #for edgeR and Max: scale_fill_viridis( na.value = "grey60",breaks=c(0, 1e-5, 2e-5, 3e-5), labels=c(" 0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5)),name="Normalized\nsharing\n ", direction = 1)
+    #for edgeR and Max: 
+    scale_fill_viridis( na.value = "grey60",breaks=c(0, 1e-5, 2e-5, 3e-5), labels=c(" 0", scientific_10(1e-5), scientific_10(2e-5),scientific_10(3e-5)),name="Normalized\nsharing\n ", direction = 1)
     #for top: scale_fill_viridis( na.value = "grey60",breaks=c(4e-6, 8e-6, 1.2e-5, 1.6e-5), labels=c(scientific_10(4e-6), scientific_10(8e-6), scientific_10(1.2e-5),scientific_10(1.6e-5)),name="Normalized\nsharing\n ", direction = 1)
-    #for total:
-    scale_fill_viridis( na.value = "grey60",breaks=c(4.25e-8, 4.75e-8, 5.25e-8), labels=c(scientific_10(4.25e-8), scientific_10(4.75e-8), scientific_10(5.25e-8) ),name="Normalized\nsharing\n ", direction = 1)
+    #for total:scale_fill_viridis( na.value = "grey60",breaks=c(4.25e-8, 4.75e-8, 5.25e-8), labels=c(scientific_10(4.25e-8), scientific_10(4.75e-8), scientific_10(5.25e-8) ),name="Normalized\nsharing\n ", direction = 1)
   library(gridExtra)
   library(grid)
   pp1<-grid.arrange(px, p, ncol=1, heights=c(2,6))
   pp1
 }
 #hm<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/edger_sharing.csv")
-make_heatmap("C:/Users/Asya/Dropbox/YF_gr/Fig_data/Max_sharing.csv")
+make_heatmap("C:/Users/Asya/Dropbox/YF_gr/fig_data2/Max_sharing.csv")
+make_heatmap("C:/Users/Asya/Dropbox/YF_gr/Fig_data/edger_sharing.csv")
 make_heatmap("C:/Users/Asya/Dropbox/YF_gr/Fig_data/total_prevac_sharing.csv")
 make_heatmap("C:/Users/Asya/Dropbox/YF_gr/Fig_data/top_prevac_sharing.csv")
 #Scatterplot
 
 make_scatter <- function(DR_data_csv) {
-  plot<-read.csv(DR_data_csv)
+  plot<-read.csv(DR_data_csv, stringsAsFactors = F)
   plot<-arrange(plot, tetramer)
   
   ggplot(plot[plot$tetramer==F, ], mapping=aes(log10(DRhi.Read.proportion), log10(CD8.Read.proportion), col=changed))+
@@ -383,12 +388,12 @@ make_scatter <- function(DR_data_csv) {
     theme(plot.margin = unit(c(1,2,1,1), "cm"))
    
 }
-plot<-read.csv("C:/Users/Asya/Dropbox/YF_gr/Fig_data/DR_small.csv")
-make_scatter("C:/Users/Asya/Dropbox/YF_gr/Fig_data/DR_small.csv")
+plot<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/DR_small.csv")
+make_scatter("C:/Users/Asya/Dropbox/YF_gr/fig_data2/DR_small.csv")
 
 #make histogram plot
 make_histplot <- function(histdatacsv2) {
-  histplot<-read.csv2(histdatacsv2)
+  histplot<-read.csv2(histdatacsv2, stringsAsFactors = F)
   histplot<-select(histplot, 2:4)
   histplot2<-data.frame(mismatches=c(histplot$mismatches, histplot$mismatches), Freq=c(histplot$YF_LLW.Freq, histplot$CMV_NLV.Freq),antigen=c(rep("YF",times=21),rep("CMV",times=21)),stringsAsFactors = F)
   histplot2$Freq[histplot2$antigen=="YF"]<-histplot2$Freq[histplot2$antigen=="YF"]/sum(histplot2$Freq[histplot2$antigen=="YF"])
@@ -415,10 +420,10 @@ make_histplot <- function(histdatacsv2) {
     theme(legend.justification=c(1,1), legend.position=c(1,1))+
     theme(legend.box.background = element_rect(colour = "black", size=2))
 }
-make_histplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/hist_data.csv")
+make_histplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/hist_data_max.csv")
 #Roc for twins
 make_roc_tw <- function(roc_data) {
-  roc<-read.csv(roc_data)
+  roc<-read.csv(roc_data, stringsAsFactors = F)
   roc$donor<-d_rename[roc$donor]
 
   ggplot(roc, aes(1-specificity, sensitivity,col=donor))+
@@ -445,11 +450,11 @@ make_roc_tw <- function(roc_data) {
     theme(legend.box.background = element_rect(colour = "black", size=2))
     
 }
-make_roc_tw("C:/Users/Asya/Dropbox/YF_gr/Fig_data/leave_one_out_roc.csv")
+make_roc_tw("C:/Users/Asya/Dropbox/YF_gr/fig_data2/leave_one_out_roc_max.csv")
 #Roc for tetramer
 
 make_roc_tet <- function(roc_data) {
-  roc_tet<-read.csv(roc_data)
+  roc_tet<-read.csv(roc_data, stringsAsFactors = F)
   ggplot(roc_tet, aes(1-specificity, sensitivity))+
     geom_line(size=1.5, col="#052F5F")+
     theme_light()+
@@ -468,19 +473,19 @@ make_roc_tet <- function(roc_data) {
     theme(plot.title = element_text(size=30, face="bold"))
     
 }
-make_roc_tet("C:/Users/Asya/Dropbox/YF_gr/Fig_data/tet_roc.csv")
+make_roc_tet("C:/Users/Asya/Dropbox/YF_gr/fig_data2/tet_roc_max.csv")
   
 #arrange hist and rocs save as 7 21
-pl1<-make_histplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/hist_data.csv")
-pl2<-make_roc_tet("C:/Users/Asya/Dropbox/YF_gr/Fig_data/tet_roc.csv")
-pl3<-make_roc_tw("C:/Users/Asya/Dropbox/YF_gr/Fig_data/leave_one_out_roc.csv")
+pl1<-make_histplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/hist_data_max.csv")
+pl2<-make_roc_tet("C:/Users/Asya/Dropbox/YF_gr/fig_data2/tet_roc_max.csv")
+pl3<-make_roc_tw("C:/Users/Asya/Dropbox/YF_gr/fig_data2/leave_one_out_roc_max.csv")
 grid.arrange(pl1, pl2,pl3, ncol=3)
 
 #Plots about sharing
 
 make_sharing_plot <- function(sharing, total) {
 
-  shVJ_tbl<-read.csv(sharing)
+  shVJ_tbl<-read.csv(sharing, stringsAsFactors = F)
   shVJ_tbl<-shVJ_tbl[shVJ_tbl$Uniq==T, ]
   #shVJ_tbl$Var1<-d_rename[shVJ_tbl$Var1]
   #shVJ_tbl$Var2<-d_rename[shVJ_tbl$Var2]
@@ -521,10 +526,10 @@ make_sharing_plot <- function(sharing, total) {
     #   theme(plot.title = element_text(hjust = 0.5, size=20))+
     
 }
-make_sharing_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/shar_Max.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/shar_total.csv")
+make_sharing_plot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/shar_Max.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/shar_total.csv")
 
 make_stacked_barplot <- function(x) {
-  cd48<-fread(x)
+  cd48<-fread(x, stringsAsFactors = F)
   cd48<-melt(cd48)
   cd48$V1<-d_rename[cd48$V1]
   ggplot(cd48, aes(V1, value, fill=variable))+
@@ -552,16 +557,88 @@ make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/specific_CD4_CD8_cumu
 
 
 
+make_tetr_plot <- function(filename) {
+  load(filename)
+  CMVm<-as.data.frame(melt(CMV_tetramer_search$means))
+  CMVsd<-as.data.frame(melt(CMV_tetramer_search$sd))
+  YFm<-as.data.frame(melt(YF_tetramer_search$means))
+  YFsd<-as.data.frame(melt(YF_tetramer_search$sd))
+  CMVm$wat<-rep("CMV tetramer", times=ncol(CMVm))
+  YFm$wat<-rep("YF tetramer", times=ncol(YFm))
+  CMVm$sd<-CMVsd$value
+  YFm$sd<-YFsd$value
+  tet<-rbind( CMVm, YFm)
+  tet$Var1<-d_rename[tet$Var1]
+  tet$Var2<-str_replace_all(tet$Var2, "d", "")
+  tet$Var2<-as.numeric(tet$Var2)
+
+  
+  ggplot(tet, aes(Var2, log10(value), col=Var1))+
+    geom_path(size=1)+
+    geom_pointrange(data=tet, aes(Var2, log10(value), ymin=log10(tet$value-tet$sd), ymax=log10(tet$value+tet$sd)),position = position_jitter(width =0, height = 0), size=0.9)+
+    theme_light()+
+    theme(panel.grid.minor.x = element_blank())+
+    theme(panel.grid.minor.y = element_blank())+
+    facet_wrap(~wat)+
+    scale_color_manual(values = my_six_colors, name="donor")+
+    theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
+    theme(strip.text = element_text(colour="black", face="bold", size=17))+
+    theme(axis.title.x = element_blank())+
+    theme(axis.text.x = element_text(size=22, color="black"))+
+    #theme(axis.text.x = element_blank())+
+    #theme(legend.position = "none")+
+    theme(axis.text.y = element_text(size=22, color="black"))+
+    theme(legend.title = element_text(size=24, face="bold"))+
+    theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
+    theme(legend.text = element_text(size=22, color="black"))+
+    #ylab(label=expression(atop(paste(log[10]," normalized number"), "of similar CDR3aa sequencies")))+
+    ylab(label="Fraction of repertoire\n")+
+    theme(axis.title.y = element_text(size=26))+
+    theme(plot.margin = unit(c(1,1,1,1), "cm"))+
+    scale_y_continuous(breaks=c(-6, -5, -4, -3), labels=c(scientific_10(1e-6), scientific_10(1e-5),scientific_10(1e-4),scientific_10(1e-3)))+
+    # ggtitle(plotname)+
+    #   theme(plot.title = element_text(hjust = 0.5, size=20))+
+    scale_x_continuous(breaks=c(0, 7, 15, 45), labels=c(0, 7,15,45))
+}
+
+make_tetr_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/CMV_YF_tetramer_search.rda")
 
 
 
+make_hist <- function(hist, x) {
+  load(hist)
+  d_rename<-sort(d_rename)
+y<-names(d_rename[x])
+hist<-as.data.frame(phen_hist[[y]])
 
 
-
-
-
-
-
+  ggplot(hist, aes(hist[,1]))+geom_histogram(aes(y=..density..), bins = 100, color="black", fill=my_six_colors[x])+
+    theme_light()+
+    theme(panel.grid.major.x = element_blank())+
+    theme(panel.grid.minor.x = element_blank())+
+    theme(panel.grid.minor.y = element_blank())+
+    #theme(axis.title.x = element_blank())+
+    theme(axis.text.x = element_text(size=24, color="black"))+
+    theme(axis.text.y = element_text(size=24, color="black"))+
+    ylab(label = "Percent of clonotypes")+
+    xlab(label="Relative fraction in CD4")+
+    theme(axis.title.y = element_text(size=26))+
+    theme(axis.title.x = element_text(size=26))+
+    scale_y_continuous(expand=c(0,0))+
+    scale_x_continuous(expand=c(0,0), labels=c(0, 0.25, 0.5, 0.75, 1))+
+    ggtitle(d_rename[[x]])+
+    theme(plot.title = element_text(size=26, face="bold"))+
+    theme(plot.title = element_text(hjust = 0.5))
+   
+    
+}
+h1<-make_hist("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_hist.rda", x=1)
+h2<-make_hist("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_hist.rda", x=2)
+h3<-make_hist("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_hist.rda", x=3)
+h4<-make_hist("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_hist.rda", x=4)
+h5<-make_hist("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_hist.rda", x=5)
+h6<-make_hist("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_hist.rda", x=6)
+grid.arrange( h1, h2, h3, h4, h5, h6, ncol=3, nrow=2)
 
 
 
