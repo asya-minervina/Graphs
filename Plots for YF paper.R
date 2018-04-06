@@ -176,8 +176,8 @@ CD4_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv")
 CD8_clones<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv")
 CD4err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4_err.csv")
 CD8err<-read.csv("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8_err.csv")
-make_lineplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_edgeR_CD8.csv",
-              "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD4_err.csv","C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv" )
+make_lineplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_edgeR_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_edgeR_CD8.csv",
+              "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4_err.csv","C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8_err.csv" )
 make_log10_lineplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8.csv", 
               "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4_err.csv", "C:/Users/Asya/Dropbox/YF_gr/Fig_data/phen_max_CD8_err.csv")
 make_lineplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD4.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/phen_max_CD8.csv", 
@@ -516,7 +516,7 @@ make_sharing_plot <- function(sharing, total) {
     theme(legend.title = element_text(size=24, face="bold"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2.5, 'lines'))+
     theme(legend.text = element_text(size=22, color="black"))+
-    ylab(label="Normalized number of\nshared TCR3aa sequences\n")+
+    ylab(label="Normalized number of\nshared CDR3aa sequences\n")+
     theme(axis.title.y = element_text(size=26))+
     theme(plot.margin = unit(c(1,1,1,1), "cm"))+
     scale_y_continuous(breaks=c(-7, -6, -5), labels=c(scientific_10(1e-7), scientific_10(1e-6),scientific_10(1e-5)))+
@@ -552,8 +552,8 @@ make_stacked_barplot <- function(x) {
   # theme(plot.title = element_text(hjust = 0.5, size=20))
 }
 
-make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/specific_CD4_CD8_counts.csv")
-make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/specific_CD4_CD8_cumulative.csv")
+make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/specific_CD4_CD8_counts.csv")
+make_stacked_barplot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/specific_CD4_CD8_cumulative.csv")
 
 
 
