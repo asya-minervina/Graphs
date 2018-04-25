@@ -26,6 +26,8 @@ scientific_10 <- function(x) {
   parse(text=gsub("e", " %*% 10^", scientific_format()(x)))
 }
 
+# instead use labels=c(expression("10"^"-4"), expression("10"^"-3"), expression("10"^"-2")))
+
 #Barplots for diff between day0 and other days, place name of the file in the first function
 #save as 7 9 inches
 
@@ -149,14 +151,14 @@ make_log10_lineplot <- function(CD4, CD8, err4, err8) {
     theme_light()+
     scale_x_continuous(breaks = c(0, 7,15,  45), labels = c("0", "7", "15", "45"))+
     #scale_y_continuous(breaks = c(0, 0.025, 0.05, 0.075), labels = c(0, 0.025, 0.05, 0.075))+
-    scale_y_continuous(breaks=c(-4, -3, -2, -1),labels=c(scientific_10(1e-4), scientific_10(1e-3),scientific_10(1e-2),scientific_10(1e-1)))+
+    scale_y_continuous(breaks=c(-4, -3, -2, -1),labels=c(expression("10"^"-4"), expression("10"^"-3"), expression("10"^"-2"), expression("10"^"-1")))+
     theme(panel.grid.minor.x = element_blank())+
     theme(panel.grid.minor.y = element_blank())+
     theme(panel.grid.major.x = element_line(linetype="dashed"))+
     geom_point(size=4, color="white", shape=21, aes(fill=donor))+
     theme(strip.background = element_rect(fill  = "grey95", colour="grey80"))+
     theme(strip.text = element_text(colour="black", face="bold", size=20))+
-    ylab(label = "Fraction of YF17D-specific cells\n")+
+    ylab(label = "Fraction of YF17D-specific cells")+
     theme(axis.title.x = element_text(size=26))+
     xlab("Days after vaccination")+
     theme(panel.spacing.x = unit(2, "lines"))+
@@ -259,6 +261,7 @@ make_similarity_plot <- function(filename) {
   data3$sd[data3$rowname=="tet"]<-0
   data3$ymax[data3$rowname=="tet"]<-log10(n)
   data3$ymin[data3$rowname=="tet"]<-log10(n)
+  #data3<-data3[!grepl(pattern = "Luci|Kar", x = data3$rowname), ]
   
   ggplot(data3[data3$wat2!="tet", ], aes(wat, log10(value), fill=wat2))+
     geom_pointrange(data=data3[data3$wat2!="tet", ], aes(wat, log10(value), ymin=ymin, ymax=ymax),position = position_jitter(width = 0.4, height = 0), size=1, shape=21, color="#052F5F")+
@@ -288,7 +291,7 @@ make_similarity_plot <- function(filename) {
     geom_point(data=data3[data3$wat2=="tet", ], mapping=aes(wat, log10(value)),size=4, shape=21, color="#052F5F")
 }
 
-
+load("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_edger.rda")
 make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/Fig_data/similarity_edger.rda")
 make_similarity_plot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/similarity_max.rda")
 
@@ -305,6 +308,8 @@ make_heatmap <- function(data_heat_csv) {
   row.names(sht)<-d_rename[row.names(sht)]
   colnames(sht)<-gsub("_0_F1","",colnames(sht))
   colnames(sht)<-d_rename[colnames(sht)]
+  print(sht)
+  #sht<-sht[c(1:4), c(1:4)]
   print(sht)
   
   x <- sht
@@ -377,10 +382,9 @@ make_scatter <- function(DR_data_csv) {
     theme(axis.text.y = element_text(size=22, color="black"))+
     theme(legend.key = element_rect(size = 20),legend.key.size = unit(2, 'lines'))+
     ylab(label=expression(paste("Clone frequency ", "in bulk CD8"^"+")))+
-    xlab(label=expression(paste("Clone frequency ","in CD8"^"+","CD38"^"+","HLADR"^"+")))+
-    scale_x_continuous(breaks=c(-5, -4, -3,  -2), labels=c(scientific_10(1e-5), scientific_10(1e-4),
-                                                                        scientific_10(1e-3), scientific_10(1e-2)))+
-    scale_y_continuous(breaks=c(-5, -4, -3, -2),labels=c(scientific_10(1e-5), scientific_10(1e-4),scientific_10(1e-3),scientific_10(1e-2)))+
+    xlab(label=expression(paste("Clone frequency ","in CD8"^"+","CD38"^"+","HLA-DR"^"+")))+
+    scale_x_continuous(breaks=c(-5, -4, -3,  -2), labels=c(expression("10"^"-5"), expression("10"^"-4"), expression("10"^"-3"), expression("10"^"-2")))+
+    scale_y_continuous(breaks=c(-5, -4, -3, -2),labels=c(expression("10"^"-5"), expression("10"^"-4"), expression("10"^"-3"), expression("10"^"-2")))+
     theme(legend.text = element_text(size=22, color="black"))+
     theme(axis.title.y = element_text(size=23))+
     theme(axis.title.x = element_text(size=23))+
@@ -484,7 +488,7 @@ grid.arrange(pl1, pl2,pl3, ncol=3)
 #Plots about sharing
 
 make_sharing_plot <- function(sharing, total) {
-
+  
   shVJ_tbl<-read.csv(sharing, stringsAsFactors = F)
   shVJ_tbl<-shVJ_tbl[shVJ_tbl$Uniq==T, ]
   #shVJ_tbl$Var1<-d_rename[shVJ_tbl$Var1]
@@ -502,6 +506,7 @@ make_sharing_plot <- function(sharing, total) {
   tot$dn<-paste0(tot$Var1, "/", tot$Var2)
   shar<-rbind(shVJ_tbl, tot)
   shar$YFspec<-factor(x = shar$YFspec, levels=c("YF specific", "total"), ordered=T)
+  #shar<-shar[!grepl(pattern = "Luci|Kar", x = shar$dn), ]
   
   ggplot(shar, aes(YFspec, log10(Freq), fill=twins))+
     geom_point(position = position_jitter(width = 0.3, height = 0), size=4.1, shape=21, color="#032449")+
@@ -526,6 +531,7 @@ make_sharing_plot <- function(sharing, total) {
     #   theme(plot.title = element_text(hjust = 0.5, size=20))+
     
 }
+make_sharing_plot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/shar_edger.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/shar_total.csv")
 make_sharing_plot("C:/Users/Asya/Dropbox/YF_gr/fig_data2/shar_Max.csv", "C:/Users/Asya/Dropbox/YF_gr/fig_data2/shar_total.csv")
 
 make_stacked_barplot <- function(x) {
